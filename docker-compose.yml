@@ -1,0 +1,66 @@
+services:
+  influxdb:
+    image: influxdb:2.7
+    restart: unless-stopped
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUX_USERNAME}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUX_PASSWORD}
+      DOCKER_INFLUXDB_INIT_ORG: ${INFLUX_ORG}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUX_BUCKET}
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUX_TOKEN}
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+      - influxdb-config:/etc/influxdb2
+    # Accessible uniquement depuis la machine hôte (debug) et le réseau interne
+    ports:
+      - "127.0.0.1:8086:8086"
+    healthcheck:
+      test: ["CMD", "influx", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    image: ghcr.io/${GHCR_OWNER}/ws2026-api:${TAG:-latest}
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # À l'intérieur du réseau compose, InfluxDB est joignable par son nom de service
+      INFLUX_URL: http://influxdb:8086
+    depends_on:
+      influxdb:
+        condition: service_healthy
+
+  nginx:
+    image: ghcr.io/${GHCR_OWNER}/ws2026-nginx:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - certbot-www:/var/www/certbot
+      - letsencrypt:/etc/letsencrypt
+    depends_on:
+      - api
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - certbot-www:/var/www/certbot
+      - letsencrypt:/etc/letsencrypt
+    # Tente un renouvellement toutes les 12 h (no-op si le certificat est encore valide)
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet; sleep 12h & wait $${!}; done;'"
+
+volumes:
+  influxdb-data:
+  influxdb-config:
+  certbot-www:
+  letsencrypt:

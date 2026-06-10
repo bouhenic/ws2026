@@ -1,0 +1,62 @@
+# Template nginx — ${DOMAIN} est substitué au démarrage du conteneur
+# (mécanisme /etc/nginx/templates de l'image officielle).
+# Les variables nginx ($host, $remote_addr…) ne sont pas touchées car
+# seules les variables d'environnement définies sont substituées.
+
+limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+
+server {
+    listen 80;
+    server_name ${DOMAIN};
+
+    # Challenge ACME pour Let's Encrypt
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name ${DOMAIN};
+
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+
+    # Headers de sécurité
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    # Dashboard statique
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # API (rate limit : 10 req/s par IP, rafales de 20)
+    location /api/ {
+        limit_req zone=api burst=20 nodelay;
+        proxy_pass http://api:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Documentation Swagger
+    location /api-docs {
+        proxy_pass http://api:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}

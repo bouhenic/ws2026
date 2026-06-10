@@ -1,0 +1,11 @@
+# Secrets — ne jamais committer
+.env
+.env.*
+!.env.example
+
+# Ancien code (contient des tokens en dur)
+legacy/
+
+node_modules/
+npm-debug.log*
+.DS_Store
