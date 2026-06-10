@@ -5,7 +5,5 @@ npm-debug.log
 .git
 .github
 legacy
-nginx
-public
 README.md
 docker-compose.yml
