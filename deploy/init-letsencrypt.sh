@@ -26,8 +26,24 @@ docker compose run --rm --entrypoint "\
     -out ${LIVE_PATH}/fullchain.pem \
     -subj /CN=${DOMAIN}'" certbot
 
-echo "### Démarrage de nginx…"
-docker compose up -d nginx
+echo "### Démarrage de nginx (recréation forcée)…"
+# --force-recreate : si le conteneur existait déjà en crash-loop (pas de
+# certificat au premier déploiement), un simple up -d ne le relancerait pas.
+docker compose up -d --force-recreate nginx
+
+echo "### Attente que nginx réponde sur le port 80…"
+for i in $(seq 1 15); do
+    if curl -s -o /dev/null -m 2 "http://localhost/.well-known/acme-challenge/"; then
+        echo "nginx répond."
+        break
+    fi
+    if [ "$i" -eq 15 ]; then
+        echo "❌ nginx ne répond pas sur le port 80 après 30 s. Logs :"
+        docker compose logs --tail 20 nginx
+        exit 1
+    fi
+    sleep 2
+done
 
 echo "### Suppression du certificat factice…"
 docker compose run --rm --entrypoint "\
@@ -42,7 +58,7 @@ docker compose run --rm --entrypoint "\
     -d ${DOMAIN} \
     --agree-tos --no-eff-email" certbot
 
-echo "### Rechargement de nginx…"
-docker compose exec nginx nginx -s reload
+echo "### Redémarrage de nginx avec le vrai certificat…"
+docker compose restart nginx
 
 echo "✅ Certificat installé. Le conteneur certbot renouvellera automatiquement."
