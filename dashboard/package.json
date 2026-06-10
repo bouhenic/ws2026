@@ -1,0 +1,21 @@
+{
+  "name": "ws2026-dashboard",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Dashboard React de la station météo LoRaWAN du Lycée Newton",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.2",
+    "vite": "^8.0.16"
+  }
+}

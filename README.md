@@ -2,7 +2,9 @@
 
 API REST + dashboard pour la station météo LoRaWAN du Lycée Newton (Clichy).
 Les uplinks TTN sont ingérés via MQTT et stockés dans InfluxDB ; l'API Express les expose
-derrière une authentification par clé API, et un dashboard statique (Chart.js) les affiche.
+derrière une authentification par clé API, et un dashboard React (Vite + Chart.js) les affiche :
+conditions actuelles, graphiques simultanés avec stats min/max/moyenne, rose des vents,
+pluviométrie cumulée.
 
 ## Architecture
 
@@ -10,7 +12,7 @@ derrière une authentification par clé API, et un dashboard statique (Chart.js)
 TTN (MQTT) ──► api (Node/Express) ──► InfluxDB 2.x
                     ▲
                     │ proxy /api + /api-docs
-internet ──► nginx (TLS, rate-limit, dashboard statique)
+internet ──► nginx (TLS, rate-limit, dashboard React)
                     ▲
               certbot (renouvellement Let's Encrypt)
 ```
@@ -19,7 +21,7 @@ internet ──► nginx (TLS, rate-limit, dashboard statique)
 |---|---|
 | `api` | Ingestion MQTT → InfluxDB + API REST (port 3000, interne) |
 | `influxdb` | Stockage des séries temporelles (8086, exposé uniquement sur localhost) |
-| `nginx` | TLS, dashboard statique, reverse proxy, rate limiting |
+| `nginx` | TLS, dashboard React (buildé dans l'image), reverse proxy, rate limiting |
 | `certbot` | Émission/renouvellement des certificats Let's Encrypt |
 
 ## Endpoints
@@ -28,7 +30,7 @@ internet ──► nginx (TLS, rate-limit, dashboard statique)
 |---|---|---|
 | `GET /api/health` | non | État du service (MQTT, uptime) |
 | `GET /api/latest` | clé API | Dernier relevé de tous les capteurs |
-| `GET /api/data/{field}?duration=-24h&aggregate=30m` | clé API | Série temporelle d'un champ |
+| `GET /api/data/{field}?duration=-24h&aggregate=30m&fn=mean` | clé API | Série temporelle d'un champ (`fn` : mean, sum, min, max) |
 | `GET /api-docs` | non | Documentation Swagger |
 
 L'authentification se fait par le header `X-API-Key`.
@@ -40,6 +42,11 @@ cp .env.example .env        # puis remplir les valeurs
 npm install
 docker compose up -d influxdb
 npm run dev                 # API sur http://localhost:3000
+
+# Dashboard (dans un second terminal) :
+cd dashboard
+npm install
+npm run dev                 # http://localhost:5173, proxy /api → localhost:3000
 ```
 
 Ou tout en docker : `docker compose up --build` (nginx nécessite un certificat,

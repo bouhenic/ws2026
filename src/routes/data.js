@@ -1,7 +1,7 @@
 const express = require('express');
 const config = require('../config');
 const { queryRows } = require('../influx');
-const { ALL_FIELDS, isValidDuration, isValidAggregate } = require('../fields');
+const { ALL_FIELDS, AGGREGATE_FNS, isValidDuration, isValidAggregate } = require('../fields');
 const { status: mqttStatus } = require('../mqtt');
 
 const router = express.Router();
@@ -108,8 +108,16 @@ router.get('/latest', async (req, res) => {
  *         required: false
  *         schema:
  *           type: string
- *         description: "Fenêtre d'agrégation (moyenne) pour réduire le volume : `15m`, `1h`, `6h`"
+ *         description: "Fenêtre d'agrégation pour réduire le volume : `15m`, `1h`, `6h`"
  *         example: "30m"
+ *       - in: query
+ *         name: fn
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [mean, sum, min, max]
+ *           default: mean
+ *         description: "Fonction appliquée à chaque fenêtre d'agrégation (ex. `sum` pour cumuler les précipitations)"
  *     responses:
  *       200:
  *         description: Série temporelle
@@ -132,6 +140,7 @@ router.get('/data/:field', async (req, res) => {
     const { field } = req.params;
     const duration = req.query.duration || '-1h';
     const aggregate = req.query.aggregate;
+    const aggregateFn = req.query.fn || 'mean';
 
     // Validation stricte : tout est interpolé dans la requête Flux
     if (!ALL_FIELDS.includes(field)) {
@@ -143,12 +152,15 @@ router.get('/data/:field', async (req, res) => {
     if (aggregate && !isValidAggregate(aggregate)) {
         return res.status(400).json({ error: `Agrégation invalide : ${aggregate} (format attendu : 30s, 15m, 2h)` });
     }
+    if (!AGGREGATE_FNS.includes(aggregateFn)) {
+        return res.status(400).json({ error: `Fonction d'agrégation invalide : ${aggregateFn}`, fns: AGGREGATE_FNS });
+    }
 
     let fluxQuery = `from(bucket: "${config.influx.bucket}")
         |> range(start: ${duration})
         |> filter(fn: (r) => r._measurement == "${config.influx.measurement}" and r._field == "${field}")`;
     if (aggregate) {
-        fluxQuery += `\n        |> aggregateWindow(every: ${aggregate}, fn: mean, createEmpty: false)`;
+        fluxQuery += `\n        |> aggregateWindow(every: ${aggregate}, fn: ${aggregateFn}, createEmpty: false)`;
     }
 
     try {

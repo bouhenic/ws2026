@@ -17,8 +17,16 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            dashboard/package-lock.json
       - run: npm ci
       - run: npm run check
+      - name: Build du dashboard
+        working-directory: dashboard
+        run: |
+          npm ci
+          npm run build
 
   build-and-push:
     needs: check

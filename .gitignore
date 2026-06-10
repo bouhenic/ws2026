@@ -9,3 +9,6 @@ legacy/
 node_modules/
 npm-debug.log*
 .DS_Store
+
+# Build du dashboard (généré par Vite)
+dashboard/dist/

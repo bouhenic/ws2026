@@ -29,6 +29,9 @@ const DURATION_REGEX = /^-(\d{1,3})(m|h|d|w)$/;
 // Fenêtre d'agrégation : 30s, 15m, 2h…
 const AGGREGATE_REGEX = /^(\d{1,4})(s|m|h|d)$/;
 
+// Fonctions d'agrégation autorisées (interpolées dans la requête Flux)
+const AGGREGATE_FNS = ['mean', 'sum', 'min', 'max'];
+
 function isValidDuration(duration) {
     const match = DURATION_REGEX.exec(duration);
     if (!match) return false;
@@ -41,4 +44,4 @@ function isValidAggregate(aggregate) {
     return AGGREGATE_REGEX.test(aggregate);
 }
 
-module.exports = { NUMERIC_FIELDS, STRING_FIELDS, ALL_FIELDS, isValidDuration, isValidAggregate };
+module.exports = { NUMERIC_FIELDS, STRING_FIELDS, ALL_FIELDS, AGGREGATE_FNS, isValidDuration, isValidAggregate };
