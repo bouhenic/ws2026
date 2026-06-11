@@ -6,6 +6,10 @@ derrière une authentification par clé API, et un dashboard React (Vite + Chart
 conditions actuelles, graphiques simultanés avec stats min/max/moyenne, rose des vents,
 pluviométrie cumulée.
 
+Le dashboard est public : nginx injecte la clé API côté serveur dans le proxy `/api/`,
+si bien que la clé ne transite jamais par le navigateur. L'API elle-même continue
+d'exiger le header `X-API-Key` (défense en profondeur, accès programmatique direct).
+
 ## Architecture
 
 ```
@@ -33,7 +37,9 @@ internet ──► nginx (TLS, rate-limit, dashboard React)
 | `GET /api/data/{field}?duration=-24h&aggregate=30m&fn=mean` | clé API | Série temporelle d'un champ (`fn` : mean, sum, min, max) |
 | `GET /api-docs` | non | Documentation Swagger |
 
-L'authentification se fait par le header `X-API-Key`.
+L'authentification se fait par le header `X-API-Key` (injecté automatiquement par
+nginx pour les requêtes passant par le site, donc en pratique publiques en lecture
+et soumises au rate limiting).
 
 ## Développement local
 

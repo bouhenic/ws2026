@@ -41,6 +41,8 @@ services:
     restart: unless-stopped
     environment:
       DOMAIN: ${DOMAIN}
+      # Injectée dans le proxy /api/ (cf. nginx/default.conf.template)
+      API_KEY: ${API_KEY}
     ports:
       - "80:80"
       - "443:443"

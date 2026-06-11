@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { apiFetch, clearApiKey, getStoredApiKey, setUnauthorizedHandler } from './api.js';
+import { apiFetch } from './api.js';
 import { DURATIONS } from './fields.js';
-import ApiKeyGate from './components/ApiKeyGate.jsx';
 import CurrentConditions from './components/CurrentConditions.jsx';
 import ChartCard from './components/ChartCard.jsx';
 import AirQualityBand from './components/AirQualityBand.jsx';
@@ -22,17 +21,9 @@ const RAIN_SERIES = [{ field: 'rainfall', label: 'Précipitations', color: '#38b
 const BATTERY_SERIES = [{ field: 'batteryVoltage', label: 'Batterie', color: '#4ade80' }];
 
 export default function App() {
-    const [hasKey, setHasKey] = useState(() => Boolean(getStoredApiKey()));
     const [duration, setDuration] = useState('-24h');
     const [latest, setLatest] = useState(null);
     const [lastUpdate, setLastUpdate] = useState(null);
-
-    useEffect(() => {
-        setUnauthorizedHandler(() => {
-            clearApiKey();
-            setHasKey(false);
-        });
-    }, []);
 
     const loadLatest = useCallback(async () => {
         try {
@@ -41,18 +32,15 @@ export default function App() {
             const times = Object.values(data).map((entry) => new Date(entry.time).getTime());
             if (times.length) setLastUpdate(new Date(Math.max(...times)));
         } catch {
-            // 401 géré par le handler global ; sinon on garde les dernières valeurs connues
+            // Erreur passagère : on garde les dernières valeurs connues
         }
     }, []);
 
     useEffect(() => {
-        if (!hasKey) return undefined;
         loadLatest();
         const id = setInterval(loadLatest, 60_000);
         return () => clearInterval(id);
-    }, [hasKey, loadLatest]);
-
-    if (!hasKey) return <ApiKeyGate onValidKey={() => setHasKey(true)} />;
+    }, [loadLatest]);
 
     return (
         <div className="app">
@@ -106,16 +94,6 @@ export default function App() {
 
             <footer>
                 <a href="/api-docs" target="_blank" rel="noreferrer">Documentation API</a>
-                <span>·</span>
-                <button
-                    className="link-button"
-                    onClick={() => {
-                        clearApiKey();
-                        setHasKey(false);
-                    }}
-                >
-                    Changer la clé API
-                </button>
             </footer>
         </div>
     );
