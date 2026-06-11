@@ -5,6 +5,7 @@ import CurrentConditions from './components/CurrentConditions.jsx';
 import ChartCard from './components/ChartCard.jsx';
 import AirQualityBand from './components/AirQualityBand.jsx';
 import WindRose from './components/WindRose.jsx';
+import PipelinePage from './components/PipelinePage.jsx';
 
 // Séries de chaque carte — constantes de module pour garder une identité stable
 // entre les rendus (évite de refetch à chaque render de App).
@@ -24,6 +25,13 @@ export default function App() {
     const [duration, setDuration] = useState('-24h');
     const [latest, setLatest] = useState(null);
     const [lastUpdate, setLastUpdate] = useState(null);
+    const [route, setRoute] = useState(() => window.location.hash);
+
+    useEffect(() => {
+        const onHashChange = () => setRoute(window.location.hash);
+        window.addEventListener('hashchange', onHashChange);
+        return () => window.removeEventListener('hashchange', onHashChange);
+    }, []);
 
     const loadLatest = useCallback(async () => {
         try {
@@ -41,6 +49,8 @@ export default function App() {
         const id = setInterval(loadLatest, 60_000);
         return () => clearInterval(id);
     }, [loadLatest]);
+
+    if (route === '#/cicd') return <PipelinePage />;
 
     return (
         <div className="app">
@@ -94,6 +104,8 @@ export default function App() {
 
             <footer>
                 <a href="/api-docs" target="_blank" rel="noreferrer">Documentation API</a>
+                <span>·</span>
+                <a href="#/cicd">Pipeline CI/CD</a>
             </footer>
         </div>
     );

@@ -304,6 +304,108 @@ main {
     flex: none;
 }
 
+/* ── Page pipeline CI/CD ────────────────────── */
+
+.pipeline {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.pipeline-card {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.pipeline-card p { color: var(--muted); line-height: 1.55; }
+
+.pipeline-card p a { color: var(--accent); }
+
+.pipeline-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.pipeline-card-header h2 { font-size: 1.05rem; }
+
+.pipeline-icon { font-size: 1.4rem; }
+
+.pipeline-badge {
+    margin-left: auto;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.8rem;
+    color: var(--accent);
+}
+
+.pipeline-trigger { border-color: var(--accent); }
+
+.pipeline-command {
+    display: block;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.9rem;
+}
+
+.pipeline-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.5rem 0;
+    color: var(--accent);
+    font-size: 0.9rem;
+}
+
+.pipeline-needs {
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-style: italic;
+}
+
+.pipeline-steps {
+    margin: 0;
+    padding-left: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    color: var(--text);
+    font-size: 0.92rem;
+}
+
+.pipeline-steps li::marker { color: var(--accent); }
+
+.pipeline-prod { border-color: #4ade80; }
+
+.pipeline-secrets {
+    margin: 0;
+    padding-left: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    color: var(--muted);
+    font-size: 0.92rem;
+}
+
+.pipeline-secrets code { color: var(--text); }
+
+.back-link {
+    color: var(--accent);
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.back-link:hover { text-decoration: underline; }
+
 /* ── Pied de page ───────────────────────────── */
 
 footer {
