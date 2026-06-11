@@ -25,6 +25,7 @@ export default function App() {
     const [duration, setDuration] = useState('-24h');
     const [latest, setLatest] = useState(null);
     const [lastUpdate, setLastUpdate] = useState(null);
+    const [latestError, setLatestError] = useState(null);
     const [route, setRoute] = useState(() => window.location.hash);
 
     useEffect(() => {
@@ -37,18 +38,21 @@ export default function App() {
         try {
             const data = await apiFetch('/api/latest');
             setLatest(data);
+            setLatestError(null);
             const times = Object.values(data).map((entry) => new Date(entry.time).getTime());
             if (times.length) setLastUpdate(new Date(Math.max(...times)));
-        } catch {
-            // Erreur passagère : on garde les dernières valeurs connues
+        } catch (err) {
+            // On garde les dernières valeurs connues, mais on affiche l'échec
+            setLatestError(err.message);
         }
     }, []);
 
     useEffect(() => {
+        if (route === '#/cicd') return undefined;
         loadLatest();
         const id = setInterval(loadLatest, 60_000);
         return () => clearInterval(id);
-    }, [loadLatest]);
+    }, [route, loadLatest]);
 
     if (route === '#/cicd') return <PipelinePage />;
 
@@ -59,11 +63,18 @@ export default function App() {
                     <h1>🌤️ Station Météo LoRaWAN</h1>
                     <p className="subtitle">Lycée Newton — Clichy</p>
                 </div>
-                {lastUpdate && (
-                    <p className="last-update">
-                        Dernier relevé : {lastUpdate.toLocaleString('fr-FR')}
-                    </p>
-                )}
+                <div>
+                    {latestError && (
+                        <p className="data-error">
+                            ⚠️ Données indisponibles ({latestError})
+                        </p>
+                    )}
+                    {lastUpdate && (
+                        <p className="last-update">
+                            Dernier relevé : {lastUpdate.toLocaleString('fr-FR')}
+                        </p>
+                    )}
+                </div>
             </header>
 
             <main>

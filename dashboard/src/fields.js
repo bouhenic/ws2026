@@ -1,18 +1,4 @@
-// Métadonnées des champs et constantes partagées du dashboard.
-
-export const FIELD_META = {
-    temperature:    { label: 'Température', unit: '°C', decimals: 1 },
-    tempDS18B20:    { label: 'Temp. sonde', unit: '°C', decimals: 1 },
-    humidity:       { label: 'Humidité', unit: '%', decimals: 0 },
-    pressure:       { label: 'Pression', unit: 'hPa', decimals: 0 },
-    rainfall:       { label: 'Précipitations', unit: 'mm', decimals: 1 },
-    avgSpeed:       { label: 'Vent moyen', unit: 'km/h', decimals: 1 },
-    maxSpeed:       { label: 'Rafales', unit: 'km/h', decimals: 1 },
-    avgDirection:   { label: 'Direction vent', unit: '°', decimals: 0 },
-    iaq:            { label: 'Qualité air (IAQ)', unit: '', decimals: 0 },
-    gas:            { label: 'Gaz', unit: 'kΩ', decimals: 1 },
-    batteryVoltage: { label: 'Batterie', unit: 'V', decimals: 2 },
-};
+// Constantes partagées du dashboard.
 
 export const DURATIONS = [
     { value: '-1h', label: '1h' },

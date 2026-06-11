@@ -68,6 +68,11 @@ main {
     font-size: 0.85rem;
 }
 
+.data-error {
+    color: #f87171;
+    font-size: 0.85rem;
+}
+
 /* ── Conditions actuelles ───────────────────── */
 
 .hero {
@@ -101,12 +106,6 @@ main {
 .hero-unit {
     font-size: 2rem;
     font-weight: 500;
-}
-
-.hero-sub {
-    color: var(--muted);
-    font-size: 0.85rem;
-    margin-top: 0.5rem;
 }
 
 .hero-metrics {
