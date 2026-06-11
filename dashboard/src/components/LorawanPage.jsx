@@ -12,6 +12,12 @@ const SIGNAL_SERIES = [
 const SF_SERIES = [{ field: 'spreadingFactor', label: 'Spreading factor', color: '#a78bfa' }];
 const GATEWAY_SERIES = [{ field: 'gatewayCount', label: 'Passerelles', color: '#34d399' }];
 
+// Axes adaptés aux grandeurs discrètes : SF va de 7 à 12, les passerelles se
+// comptent en entiers (l'auto-échelle de Chart.js graduerait en décimales
+// quand la valeur est constante).
+const SF_YSCALE = { min: 7, max: 12, ticks: { stepSize: 1 } };
+const GATEWAY_YSCALE = { min: 0, suggestedMax: 3, ticks: { stepSize: 1 } };
+
 const GLOSSARY = [
     {
         term: 'RSSI (Received Signal Strength Indicator)',
@@ -166,9 +172,9 @@ export default function LorawanPage() {
                         series={SIGNAL_SERIES} decimals={0} span={8} />
                     <ChannelUsage duration={duration} span={4} />
                     <ChartCard title="Spreading factor" icon="🌀" duration={duration}
-                        series={SF_SERIES} unit="" decimals={0} />
+                        series={SF_SERIES} unit="" decimals={0} yScale={SF_YSCALE} />
                     <ChartCard title="Passerelles en réception" icon="🗼" duration={duration}
-                        series={GATEWAY_SERIES} unit="" decimals={0} />
+                        series={GATEWAY_SERIES} unit="" decimals={0} yScale={GATEWAY_YSCALE} />
                 </div>
 
                 <div className="card glossary-card">

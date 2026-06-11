@@ -9,6 +9,7 @@ const TICK_COLOR = '#8fa3bd';
 // Carte graphique générique : une ou plusieurs séries sur la même plage de temps.
 // `series` doit être une constante de module (identité stable) pour éviter les refetchs.
 // fn='sum' affiche des barres cumulables (pluviométrie) ; cumulative ajoute la courbe de cumul.
+// `yScale` (constante de module aussi) surcharge l'axe Y : bornes, stepSize…
 export default function ChartCard({
     title,
     icon,
@@ -20,6 +21,7 @@ export default function ChartCard({
     decimals = 1,
     unit = '',
     span = 6,
+    yScale,
 }) {
     const canvasRef = useRef(null);
     const chartRef = useRef(null);
@@ -114,7 +116,8 @@ export default function ChartCard({
                         grid: { color: GRID_COLOR },
                     },
                     y: {
-                        ticks: { color: TICK_COLOR },
+                        ...yScale,
+                        ticks: { color: TICK_COLOR, ...yScale?.ticks },
                         grid: { color: GRID_COLOR },
                     },
                     ...(usesRightAxis && {
@@ -134,7 +137,7 @@ export default function ChartCard({
                 chartRef.current = null;
             }
         };
-    }, [data, duration, type, cumulative]);
+    }, [data, duration, type, cumulative, yScale]);
 
     const isEmpty = data && data.every((s) => s.points.length === 0);
 
