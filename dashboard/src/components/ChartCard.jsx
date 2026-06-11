@@ -84,7 +84,8 @@ export default function ChartCard({
                 data: cumValues,
                 borderColor: '#38bdf8',
                 pointRadius: 0,
-                borderWidth: 2,
+                borderWidth: 1,
+                borderDash: [4, 4],
                 tension: 0.2,
                 yAxisID: 'y1',
             });

@@ -4,13 +4,13 @@ import { DURATIONS } from './fields.js';
 import ApiKeyGate from './components/ApiKeyGate.jsx';
 import CurrentConditions from './components/CurrentConditions.jsx';
 import ChartCard from './components/ChartCard.jsx';
+import AirQualityBand from './components/AirQualityBand.jsx';
 import WindRose from './components/WindRose.jsx';
 
 // Séries de chaque carte — constantes de module pour garder une identité stable
 // entre les rendus (évite de refetch à chaque render de App).
 const TEMPERATURE_SERIES = [
     { field: 'temperature', label: 'Air', color: '#fb923c' },
-    { field: 'tempDS18B20', label: 'Sonde sol', color: '#f43f5e' },
 ];
 const HUMIDITY_SERIES = [{ field: 'humidity', label: 'Humidité', color: '#38bdf8' }];
 const PRESSURE_SERIES = [{ field: 'pressure', label: 'Pression', color: '#a78bfa' }];
@@ -19,10 +19,6 @@ const WIND_SERIES = [
     { field: 'maxSpeed', label: 'Rafales', color: '#fbbf24' },
 ];
 const RAIN_SERIES = [{ field: 'rainfall', label: 'Précipitations', color: '#38bdf8' }];
-const AIR_SERIES = [
-    { field: 'iaq', label: 'IAQ', color: '#f472b6', unit: '', decimals: 0 },
-    { field: 'gas', label: 'Gaz (kΩ)', color: '#94a3b8', unit: 'kΩ', decimals: 1, axis: 'y1' },
-];
 const BATTERY_SERIES = [{ field: 'batteryVoltage', label: 'Batterie', color: '#4ade80' }];
 
 export default function App() {
@@ -102,8 +98,7 @@ export default function App() {
                         series={WIND_SERIES} unit="km/h" decimals={1} />
                     <ChartCard title="Précipitations" icon="🌧️" duration={duration}
                         series={RAIN_SERIES} unit="mm" decimals={1} type="bar" fn="sum" cumulative />
-                    <ChartCard title="Qualité de l'air" icon="🍃" duration={duration}
-                        series={AIR_SERIES} decimals={0} />
+                    <AirQualityBand duration={duration} />
                     <ChartCard title="Batterie" icon="🔋" duration={duration}
                         series={BATTERY_SERIES} unit="V" decimals={2} />
                 </div>

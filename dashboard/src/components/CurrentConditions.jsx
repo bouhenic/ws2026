@@ -8,7 +8,6 @@ function metric(latest, field) {
 // Bandeau des conditions actuelles : température en vedette + mesures clés.
 export default function CurrentConditions({ latest }) {
     const temperature = metric(latest, 'temperature');
-    const sonde = metric(latest, 'tempDS18B20');
     const humidity = metric(latest, 'humidity');
     const pressure = metric(latest, 'pressure');
     const wind = metric(latest, 'avgSpeed');
@@ -23,7 +22,6 @@ export default function CurrentConditions({ latest }) {
         <section className="hero">
             <div className="hero-temp">
                 <span className="hero-value">{formatValue(temperature, 1)}<span className="hero-unit">°C</span></span>
-                {sonde != null && <span className="hero-sub">Sonde sol : {formatValue(sonde, 1)} °C</span>}
             </div>
             <div className="hero-metrics">
                 <div className="metric">

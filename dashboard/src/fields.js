@@ -57,11 +57,15 @@ export function formatValue(value, decimals = 1) {
 }
 
 // Échelle IAQ du capteur BME680 (indice Bosch)
+export const IAQ_LEVELS = [
+    { max: 50, label: 'Excellent', color: '#4ade80' },
+    { max: 100, label: 'Bon', color: '#a3e635' },
+    { max: 150, label: 'Moyen', color: '#facc15' },
+    { max: 200, label: 'Dégradé', color: '#fb923c' },
+    { max: 300, label: 'Mauvais', color: '#f87171' },
+    { max: Infinity, label: 'Très mauvais', color: '#c084fc' },
+];
+
 export function iaqLevel(iaq) {
-    if (iaq <= 50) return { label: 'Excellent', color: '#4ade80' };
-    if (iaq <= 100) return { label: 'Bon', color: '#a3e635' };
-    if (iaq <= 150) return { label: 'Moyen', color: '#facc15' };
-    if (iaq <= 200) return { label: 'Dégradé', color: '#fb923c' };
-    if (iaq <= 300) return { label: 'Mauvais', color: '#f87171' };
-    return { label: 'Très mauvais', color: '#c084fc' };
+    return IAQ_LEVELS.find((level) => iaq <= level.max);
 }
