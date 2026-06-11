@@ -21,7 +21,22 @@ const STRING_FIELDS = [
     'maxSpeedDirectionCardinal',
 ];
 
-const ALL_FIELDS = [...NUMERIC_FIELDS, ...STRING_FIELDS];
+// Métadonnées radio LoRaWAN, extraites de l'enveloppe TTN (pas du payload décodé)
+const LORAWAN_NUMERIC_FIELDS = [
+    'airtime',
+    'fCnt',
+    'frequency',
+    'gatewayCount',
+    'rssi',
+    'snr',
+    'spreadingFactor',
+];
+
+const LORAWAN_STRING_FIELDS = [
+    'gatewayId',
+];
+
+const ALL_FIELDS = [...NUMERIC_FIELDS, ...STRING_FIELDS, ...LORAWAN_NUMERIC_FIELDS, ...LORAWAN_STRING_FIELDS];
 
 // Plage de temps Flux relative : -30m, -6h, -7d… (bornée à 365 jours)
 const DURATION_REGEX = /^-(\d{1,3})(m|h|d|w)$/;
@@ -44,4 +59,13 @@ function isValidAggregate(aggregate) {
     return AGGREGATE_REGEX.test(aggregate);
 }
 
-module.exports = { NUMERIC_FIELDS, STRING_FIELDS, ALL_FIELDS, AGGREGATE_FNS, isValidDuration, isValidAggregate };
+module.exports = {
+    NUMERIC_FIELDS,
+    STRING_FIELDS,
+    LORAWAN_NUMERIC_FIELDS,
+    LORAWAN_STRING_FIELDS,
+    ALL_FIELDS,
+    AGGREGATE_FNS,
+    isValidDuration,
+    isValidAggregate,
+};

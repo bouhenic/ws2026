@@ -55,3 +55,28 @@ export const IAQ_LEVELS = [
 export function iaqLevel(iaq) {
     return IAQ_LEVELS.find((level) => iaq <= level.max);
 }
+
+// Qualité du signal radio selon le RSSI (dBm) — ordres de grandeur LoRa usuels
+export const RSSI_LEVELS = [
+    { min: -80, label: 'Excellent', color: '#4ade80' },
+    { min: -95, label: 'Bon', color: '#a3e635' },
+    { min: -110, label: 'Moyen', color: '#facc15' },
+    { min: -120, label: 'Faible', color: '#fb923c' },
+    { min: -Infinity, label: 'Limite', color: '#f87171' },
+];
+
+export function rssiLevel(rssi) {
+    return RSSI_LEVELS.find((level) => rssi >= level.min);
+}
+
+// Qualité selon le SNR (dB) : LoRa démodule jusqu'à ≈ -20 dB (SF12)
+export const SNR_LEVELS = [
+    { min: 5, label: 'Excellent', color: '#4ade80' },
+    { min: 0, label: 'Bon', color: '#a3e635' },
+    { min: -10, label: 'Moyen', color: '#facc15' },
+    { min: -Infinity, label: 'Limite', color: '#fb923c' },
+];
+
+export function snrLevel(snr) {
+    return SNR_LEVELS.find((level) => snr >= level.min);
+}

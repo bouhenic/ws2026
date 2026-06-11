@@ -12,7 +12,9 @@ const swaggerDefinition = {
 
 **Champs numériques :** \`avgDirection\`, \`avgSpeed\`, \`batteryVoltage\`, \`gas\`, \`humidity\`, \`iaq\`, \`maxSpeed\`, \`maxSpeedDirection\`, \`pressure\`, \`rainfall\`, \`tempDS18B20\`, \`temperature\`
 
-**Champs texte :** \`avgDirectionCardinal\`, \`maxSpeedDirectionCardinal\``,
+**Champs texte :** \`avgDirectionCardinal\`, \`maxSpeedDirectionCardinal\`
+
+**Champs radio LoRaWAN** (métadonnées TTN, meilleure passerelle) : \`rssi\` (dBm), \`snr\` (dB), \`spreadingFactor\`, \`frequency\` (MHz), \`gatewayCount\`, \`fCnt\`, \`airtime\` (ms), \`gatewayId\` (texte)`,
         contact: {
             name: 'BTS CIEL - Lycée Newton',
         },

@@ -6,6 +6,7 @@ import ChartCard from './components/ChartCard.jsx';
 import AirQualityBand from './components/AirQualityBand.jsx';
 import WindRose from './components/WindRose.jsx';
 import PipelinePage from './components/PipelinePage.jsx';
+import LorawanPage from './components/LorawanPage.jsx';
 
 // Séries de chaque carte — constantes de module pour garder une identité stable
 // entre les rendus (évite de refetch à chaque render de App).
@@ -47,14 +48,18 @@ export default function App() {
         }
     }, []);
 
+    // Les pages secondaires gèrent leurs propres données : pas de polling ici
+    const isSubPage = route === '#/cicd' || route === '#/lorawan';
+
     useEffect(() => {
-        if (route === '#/cicd') return undefined;
+        if (isSubPage) return undefined;
         loadLatest();
         const id = setInterval(loadLatest, 60_000);
         return () => clearInterval(id);
-    }, [route, loadLatest]);
+    }, [isSubPage, loadLatest]);
 
     if (route === '#/cicd') return <PipelinePage />;
+    if (route === '#/lorawan') return <LorawanPage />;
 
     return (
         <div className="app">
@@ -115,6 +120,8 @@ export default function App() {
 
             <footer>
                 <a href="/api-docs" target="_blank" rel="noreferrer">Documentation API</a>
+                <span>·</span>
+                <a href="#/lorawan">Réseau LoRaWAN</a>
                 <span>·</span>
                 <a href="#/cicd">Pipeline CI/CD</a>
             </footer>

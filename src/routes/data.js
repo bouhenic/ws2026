@@ -85,6 +85,10 @@ router.get('/latest', async (req, res) => {
  *       `maxSpeed`, `avgDirection`, `maxSpeedDirection`, `batteryVoltage`, `gas`, `iaq`, `tempDS18B20`
  *
  *       **Champs texte :** `avgDirectionCardinal`, `maxSpeedDirectionCardinal`
+ *
+ *       **Champs radio LoRaWAN** (métadonnées de l'enveloppe TTN, meilleure passerelle) :
+ *       `rssi` (dBm), `snr` (dB), `spreadingFactor` (SF7-SF12), `frequency` (MHz),
+ *       `gatewayCount`, `fCnt` (compteur de trames), `airtime` (ms), `gatewayId` (texte)
  *     parameters:
  *       - in: path
  *         name: field
@@ -93,7 +97,9 @@ router.get('/latest', async (req, res) => {
  *           type: string
  *           enum: [temperature, humidity, pressure, rainfall, avgSpeed, maxSpeed,
  *                  avgDirection, avgDirectionCardinal, maxSpeedDirection,
- *                  maxSpeedDirectionCardinal, batteryVoltage, gas, iaq, tempDS18B20]
+ *                  maxSpeedDirectionCardinal, batteryVoltage, gas, iaq, tempDS18B20,
+ *                  rssi, snr, spreadingFactor, frequency, gatewayCount, fCnt,
+ *                  airtime, gatewayId]
  *         description: Nom du champ à récupérer
  *         example: temperature
  *       - in: query
