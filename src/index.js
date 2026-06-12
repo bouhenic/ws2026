@@ -5,8 +5,10 @@ const swaggerUi = require('swagger-ui-express');
 const config = require('./config');
 const { writeApi } = require('./influx');
 const ingester = require('./mqtt');
+const gatewayCollector = require('./gatewayEvents');
 const { apiKeyAuth } = require('./middleware/auth');
 const dataRoutes = require('./routes/data');
+const gatewayRoutes = require('./routes/gateway');
 const swaggerSpec = require('./swagger');
 
 const app = express();
@@ -32,7 +34,7 @@ app.get('/api-docs.json', (req, res) => {
 app.use('/api', (req, res, next) => {
     if (req.path === '/health') return next();
     return apiKeyAuth(req, res, next);
-}, dataRoutes);
+}, dataRoutes, gatewayRoutes);
 
 app.use((req, res) => {
     res.status(404).json({ error: 'Route inconnue' });
@@ -40,6 +42,7 @@ app.use((req, res) => {
 
 // ── Démarrage ────────────────────────────────
 const mqttClient = ingester.start();
+gatewayCollector.start();
 
 const server = app.listen(config.port, () => {
     console.log(`✅ Serveur démarré sur http://localhost:${config.port}`);
@@ -51,6 +54,7 @@ async function shutdown(signal) {
     console.log(`\n${signal} reçu, arrêt en cours…`);
     server.close();
     mqttClient.end();
+    gatewayCollector.stop();
     try {
         await writeApi.close();
         console.log('InfluxDB writeApi fermé proprement.');

@@ -25,6 +25,7 @@ const swaggerDefinition = {
     ],
     tags: [
         { name: 'Données capteurs', description: 'Récupération des mesures météo depuis InfluxDB' },
+        { name: 'Passerelle', description: 'Trafic LoRaWAN relayé par la passerelle du lycée (métadonnées radio uniquement, payloads chiffrés)' },
         { name: 'Système', description: 'Supervision du service' },
     ],
     components: {

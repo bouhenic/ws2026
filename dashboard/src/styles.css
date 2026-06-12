@@ -437,6 +437,36 @@ main {
     line-height: 1.55;
 }
 
+/* ── Page passerelle ────────────────────────── */
+
+.traffic-table-card {
+    margin-top: 1.25rem;
+    overflow-x: auto;
+}
+
+.traffic-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.traffic-table th {
+    text-align: left;
+    color: var(--muted);
+    font-weight: 600;
+    padding: 0.45rem 0.75rem;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.traffic-table td {
+    padding: 0.45rem 0.75rem;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+    color: var(--text);
+    white-space: nowrap;
+}
+
+.traffic-table .mono { font-family: ui-monospace, monospace; }
+
 /* ── Pied de page ───────────────────────────── */
 
 footer {

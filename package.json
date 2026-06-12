@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
-    "check": "node --check src/index.js && node --check src/config.js && node --check src/influx.js && node --check src/mqtt.js && node --check src/fields.js && node --check src/swagger.js && node --check src/middleware/auth.js && node --check src/routes/data.js"
+    "check": "node --check src/index.js && node --check src/config.js && node --check src/influx.js && node --check src/mqtt.js && node --check src/fields.js && node --check src/swagger.js && node --check src/middleware/auth.js && node --check src/routes/data.js && node --check src/gatewayEvents.js && node --check src/routes/gateway.js"
   },
   "license": "MIT",
   "dependencies": {

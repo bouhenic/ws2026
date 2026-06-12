@@ -3,6 +3,7 @@ const config = require('../config');
 const { queryRows } = require('../influx');
 const { ALL_FIELDS, AGGREGATE_FNS, isValidDuration, isValidAggregate } = require('../fields');
 const { status: mqttStatus } = require('../mqtt');
+const { status: gatewayStreamStatus } = require('../gatewayEvents');
 
 const router = express.Router();
 
@@ -31,6 +32,13 @@ router.get('/health', (req, res) => {
         mqttConnected: mqttStatus.connected,
         lastUplinkAt: mqttStatus.lastUplinkAt,
         uplinkCount: mqttStatus.uplinkCount,
+        gatewayStream: {
+            enabled: gatewayStreamStatus.enabled,
+            connected: gatewayStreamStatus.connected,
+            lastEventAt: gatewayStreamStatus.lastEventAt,
+            frameCount: gatewayStreamStatus.frameCount,
+            reconnects: gatewayStreamStatus.reconnects,
+        },
         uptimeSeconds: Math.round(process.uptime()),
     });
 });

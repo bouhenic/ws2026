@@ -13,17 +13,17 @@ d'exiger le header `X-API-Key` (défense en profondeur, accès programmatique di
 ## Architecture
 
 ```
-TTN (MQTT) ──► api (Node/Express) ──► InfluxDB 2.x
-                    ▲
-                    │ proxy /api + /api-docs
+TTN (MQTT + Events API) ──► api (Node/Express) ──► InfluxDB 2.x
+                                 ▲
+                                 │ proxy /api + /api-docs
 internet ──► nginx (TLS, rate-limit, dashboard React)
-                    ▲
-              certbot (renouvellement Let's Encrypt)
+                                 ▲
+                           certbot (renouvellement Let's Encrypt)
 ```
 
 | Service | Rôle |
 |---|---|
-| `api` | Ingestion MQTT → InfluxDB + API REST (port 3000, interne) |
+| `api` | Ingestion MQTT + collecte du trafic passerelle (TTN Events) → InfluxDB + API REST (port 3000, interne) |
 | `influxdb` | Stockage des séries temporelles (8086, exposé uniquement sur localhost) |
 | `nginx` | TLS, dashboard React (buildé dans l'image), reverse proxy, rate limiting |
 | `certbot` | Émission/renouvellement des certificats Let's Encrypt |
@@ -35,7 +35,14 @@ internet ──► nginx (TLS, rate-limit, dashboard React)
 | `GET /api/health` | non | État du service (MQTT, uptime) |
 | `GET /api/latest` | clé API | Dernier relevé de tous les capteurs |
 | `GET /api/data/{field}?duration=-24h&aggregate=30m&fn=mean` | clé API | Série temporelle d'un champ (`fn` : mean, sum, min, max) |
+| `GET /api/gateway/traffic?duration=-24h` | clé API | Trames LoRaWAN relayées par la passerelle (métadonnées radio, payloads chiffrés) |
+| `GET /api/gateway/noise?duration=-24h&aggregate=1h` | clé API | Trames entendues vs valides (bruit CRC) |
+| `GET /api/gateway/stats` | clé API | État de connexion de la passerelle (compteurs, RTT, duty cycle) |
 | `GET /api-docs` | non | Documentation Swagger |
+
+La collecte du trafic passerelle nécessite `TTN_GATEWAY_API_KEY` dans le `.env`
+(clé API de la passerelle avec le droit « Read gateway traffic ») ; sans elle,
+le reste de l'application fonctionne normalement.
 
 L'authentification se fait par le header `X-API-Key` (injecté automatiquement par
 nginx pour les requêtes passant par le site, donc en pratique publiques en lecture

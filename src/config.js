@@ -18,6 +18,13 @@ module.exports = {
         password: required('MQTT_PASSWORD'),
         topic: process.env.MQTT_TOPIC || `v3/${process.env.MQTT_USERNAME}/devices/+/up`,
     },
+    // Trafic de la passerelle LoRaWAN via l'API Events de TTN.
+    // Optionnel : sans clé, le collecteur ne démarre pas (le reste fonctionne).
+    ttn: {
+        baseUrl: process.env.TTN_BASE_URL || 'https://eu1.cloud.thethings.network',
+        gatewayId: process.env.TTN_GATEWAY_ID || 'newton-laird',
+        gatewayApiKey: process.env.TTN_GATEWAY_API_KEY || null,
+    },
     influx: {
         url: process.env.INFLUX_URL || 'http://localhost:8086',
         token: required('INFLUX_TOKEN'),
