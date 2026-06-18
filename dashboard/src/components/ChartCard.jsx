@@ -51,7 +51,7 @@ export default function ChartCard({
         const timeKeys = [...new Set(data.flatMap((s) => s.points.map((p) => p.t)))].sort((a, b) => a - b);
         const daily = ['-7d', '-30d'].includes(duration);
         const labels = timeKeys.map((t) => formatTick(t, daily));
-        const fullLabels = timeKeys.map((t) => new Date(t).toLocaleString('fr-FR'));
+        const fullLabels = timeKeys.map((t) => new Date(t).toLocaleString('en-GB'));
 
         const usesRightAxis = cumulative || data.some((s) => s.axis === 'y1');
         const datasets = data.map((s) => {
@@ -82,7 +82,7 @@ export default function ChartCard({
             });
             datasets.push({
                 type: 'line',
-                label: 'Cumul',
+                label: 'Cumulative',
                 data: cumValues,
                 borderColor: '#38bdf8',
                 pointRadius: 0,
@@ -100,6 +100,7 @@ export default function ChartCard({
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                locale: 'en-GB',
                 interaction: { mode: 'index', intersect: false },
                 plugins: {
                     legend: {
@@ -148,15 +149,15 @@ export default function ChartCard({
             </div>
             <div className="card-chart">
                 {error && <p className="card-message">⚠️ {error}</p>}
-                {!error && !data && <p className="card-message">Chargement…</p>}
-                {!error && isEmpty && <p className="card-message">Aucune donnée sur la période.</p>}
+                {!error && !data && <p className="card-message">Loading…</p>}
+                {!error && isEmpty && <p className="card-message">No data for this period.</p>}
                 <canvas ref={canvasRef} style={{ visibility: !error && data && !isEmpty ? 'visible' : 'hidden' }} />
             </div>
             {data && !isEmpty && (
                 <div className="card-stats">
                     {fn === 'sum' ? (
                         <span className="stat">
-                            Cumul : <strong>{formatValue(data[0].points.reduce((acc, p) => acc + p.v, 0), decimals)} {unit}</strong>
+                            Total: <strong>{formatValue(data[0].points.reduce((acc, p) => acc + p.v, 0), decimals)} {unit}</strong>
                         </span>
                     ) : (
                         data.map((s) => {
@@ -171,7 +172,7 @@ export default function ChartCard({
                                 <span key={s.field} className="stat">
                                     <i style={{ background: s.color }} />
                                     {data.length > 1 && `${s.label} — `}
-                                    min {formatValue(min, d)} · moy {formatValue(mean, d)} · max {formatValue(max, d)} {u}
+                                    min {formatValue(min, d)} · avg {formatValue(mean, d)} · max {formatValue(max, d)} {u}
                                 </span>
                             );
                         })

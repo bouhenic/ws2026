@@ -59,19 +59,19 @@ export default function WindRose({ duration, span = 4 }) {
     return (
         <div className={`card span-${span}`}>
             <div className="card-header">
-                <h2>🧭 Rose des vents</h2>
+                <h2>🧭 Wind rose</h2>
             </div>
             <div className="card-chart windrose">
                 {error && <p className="card-message">⚠️ {error}</p>}
-                {!error && !sectors && <p className="card-message">Chargement…</p>}
-                {!error && isEmpty && <p className="card-message">Aucune donnée sur la période.</p>}
+                {!error && !sectors && <p className="card-message">Loading…</p>}
+                {!error && isEmpty && <p className="card-message">No data for this period.</p>}
                 {!error && sectors && !isEmpty && (
-                    <svg viewBox="-110 -110 220 220" role="img" aria-label="Rose des vents">
+                    <svg viewBox="-110 -110 220 220" role="img" aria-label="Wind rose">
                         {[0.25, 0.5, 0.75, 1].map((ratio) => (
                             <circle key={ratio} r={ratio * 90} fill="none"
                                 stroke="rgba(148, 163, 184, 0.15)" strokeWidth="1" />
                         ))}
-                        {[['N', 0, -99], ['E', 101, 0], ['S', 0, 103], ['O', -101, 0]].map(([label, x, y]) => (
+                        {[['N', 0, -99], ['E', 101, 0], ['S', 0, 103], ['W', -101, 0]].map(([label, x, y]) => (
                             <text key={label} x={x} y={y} className="windrose-cardinal"
                                 textAnchor="middle" dominantBaseline="middle">{label}</text>
                         ))}
@@ -81,7 +81,7 @@ export default function WindRose({ duration, span = 4 }) {
                                 fill={speedColor(sector.meanSpeed)} fillOpacity="0.75"
                                 stroke="rgba(11, 17, 32, 0.6)" strokeWidth="1">
                                 <title>
-                                    {`${sector.cardinal} : ${sector.pct.toFixed(1)} % du temps · vent moyen ${sector.meanSpeed.toFixed(1)} km/h`}
+                                    {`${sector.cardinal} : ${sector.pct.toFixed(1)} % of time · mean wind ${sector.meanSpeed.toFixed(1)} km/h`}
                                 </title>
                             </path>
                         ))}

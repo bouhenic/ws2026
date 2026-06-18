@@ -12,7 +12,7 @@ export class ApiError extends Error {
 export async function apiFetch(path) {
     const response = await fetch(path);
     if (!response.ok) {
-        throw new ApiError(`Erreur API ${response.status}`, response.status);
+        throw new ApiError(`API error ${response.status}`, response.status);
     }
     return response.json();
 }

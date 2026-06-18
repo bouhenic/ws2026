@@ -15,7 +15,9 @@ export default function CurrentConditions({ latest }) {
     const rain = metric(latest, 'rainfall');
     const iaq = metric(latest, 'iaq');
     const battery = metric(latest, 'batteryVoltage');
-    const cardinal = latest?.avgDirectionCardinal?.value;
+    // L'API renvoie le cardinal en notation française (O = Ouest) ; on le passe
+    // en notation anglaise (O→W : SO→SW, OSO→WSW, etc.).
+    const cardinal = latest?.avgDirectionCardinal?.value?.replace(/O/g, 'W');
     const air = iaq != null ? iaqLevel(iaq) : null;
 
     return (
@@ -25,22 +27,22 @@ export default function CurrentConditions({ latest }) {
             </div>
             <div className="hero-metrics">
                 <div className="metric">
-                    <span className="metric-label">💧 Humidité</span>
+                    <span className="metric-label">💧 Humidity</span>
                     <span className="metric-value">{formatValue(humidity, 0)} %</span>
                 </div>
                 <div className="metric">
-                    <span className="metric-label">🌡️ Pression</span>
+                    <span className="metric-label">🌡️ Pressure</span>
                     <span className="metric-value">{formatValue(pressure, 0)} hPa</span>
                 </div>
                 <div className="metric">
-                    <span className="metric-label">💨 Vent</span>
+                    <span className="metric-label">💨 Wind</span>
                     <span className="metric-value">
                         {formatValue(wind, 1)} km/h{cardinal ? ` ${cardinal}` : ''}
                     </span>
-                    {gusts != null && <span className="metric-sub">rafales {formatValue(gusts, 1)} km/h</span>}
+                    {gusts != null && <span className="metric-sub">gusts {formatValue(gusts, 1)} km/h</span>}
                 </div>
                 <div className="metric">
-                    <span className="metric-label">🌧️ Pluie</span>
+                    <span className="metric-label">🌧️ Rain</span>
                     <span className="metric-value">{formatValue(rain, 1)} mm</span>
                 </div>
                 <div className="metric">
@@ -51,7 +53,7 @@ export default function CurrentConditions({ latest }) {
                     </span>
                 </div>
                 <div className="metric">
-                    <span className="metric-label">🔋 Batterie</span>
+                    <span className="metric-label">🔋 Battery</span>
                     <span className="metric-value">{formatValue(battery, 2)} V</span>
                 </div>
             </div>

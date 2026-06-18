@@ -110,15 +110,15 @@ export default function WindTimeline({ duration, span = 12 }) {
     return (
         <div className={`card span-${span}`}>
             <div className="card-header">
-                <h2>💨 Vent dans le temps</h2>
+                <h2>💨 Wind over time</h2>
             </div>
             <div className="card-chart windtimeline">
                 {error && <p className="card-message">⚠️ {error}</p>}
-                {!error && !bins && <p className="card-message">Chargement…</p>}
-                {!error && isEmpty && <p className="card-message">Aucune donnée sur la période.</p>}
+                {!error && !bins && <p className="card-message">Loading…</p>}
+                {!error && isEmpty && <p className="card-message">No data for this period.</p>}
                 {!error && ready && (
                     <svg viewBox={`0 0 ${W} ${H}`} role="img"
-                        aria-label="Direction et vitesse du vent au cours du temps">
+                        aria-label="Wind direction and speed over time">
                         <line x1={PAD_L} y1={AXIS_Y} x2={W - PAD_R} y2={AXIS_Y}
                             stroke="rgba(148, 163, 184, 0.25)" strokeWidth="1" />
                         {ticks.map((t) => (
@@ -138,7 +138,7 @@ export default function WindTimeline({ duration, span = 12 }) {
             <div className="card-stats">
                 {ready && !isEmpty && (
                     <span className="stat">
-                        moy {formatValue(meanSpeed)} · max {formatValue(maxSpeed)} km/h
+                        avg {formatValue(meanSpeed)} · max {formatValue(maxSpeed)} km/h
                     </span>
                 )}
                 {LEGEND.map((item) => (
@@ -146,7 +146,7 @@ export default function WindTimeline({ duration, span = 12 }) {
                         <i style={{ background: item.color }} />{item.label}
                     </span>
                 ))}
-                <span className="stat windtimeline-note">↑ flèche = provenance du vent</span>
+                <span className="stat windtimeline-note">↑ arrow = wind source</span>
             </div>
         </div>
     );

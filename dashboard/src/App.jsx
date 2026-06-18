@@ -15,14 +15,14 @@ import GatewayPage from './components/GatewayPage.jsx';
 const TEMPERATURE_SERIES = [
     { field: 'temperature', label: 'Air', color: '#fb923c' },
 ];
-const HUMIDITY_SERIES = [{ field: 'humidity', label: 'Humidité', color: '#38bdf8' }];
-const PRESSURE_SERIES = [{ field: 'pressure', label: 'Pression', color: '#a78bfa' }];
+const HUMIDITY_SERIES = [{ field: 'humidity', label: 'Humidity', color: '#38bdf8' }];
+const PRESSURE_SERIES = [{ field: 'pressure', label: 'Pressure', color: '#a78bfa' }];
 const WIND_SERIES = [
-    { field: 'avgSpeed', label: 'Vent moyen', color: '#34d399' },
-    { field: 'maxSpeed', label: 'Rafales', color: '#fbbf24' },
+    { field: 'avgSpeed', label: 'Mean wind', color: '#34d399' },
+    { field: 'maxSpeed', label: 'Gusts', color: '#fbbf24' },
 ];
-const RAIN_SERIES = [{ field: 'rainfall', label: 'Précipitations', color: '#38bdf8' }];
-const BATTERY_SERIES = [{ field: 'batteryVoltage', label: 'Batterie', color: '#4ade80' }];
+const RAIN_SERIES = [{ field: 'rainfall', label: 'Rainfall', color: '#38bdf8' }];
+const BATTERY_SERIES = [{ field: 'batteryVoltage', label: 'Battery', color: '#4ade80' }];
 
 export default function App() {
     const [duration, setDuration] = useState('-24h');
@@ -68,18 +68,18 @@ export default function App() {
         <div className="app">
             <header className="topbar">
                 <div>
-                    <h1>🌤️ Station Météo LoRaWAN</h1>
-                    <p className="subtitle">Lycée Newton — Clichy</p>
+                    <h1>🌤️ LoRaWAN Weather Station</h1>
+                    <p className="subtitle">Newton High School — Clichy</p>
                 </div>
                 <div>
                     {latestError && (
                         <p className="data-error">
-                            ⚠️ Données indisponibles ({latestError})
+                            ⚠️ Data unavailable ({latestError})
                         </p>
                     )}
                     {lastUpdate && (
                         <p className="last-update">
-                            Dernier relevé : {lastUpdate.toLocaleString('fr-FR')}
+                            Last reading: {lastUpdate.toLocaleString('en-GB')}
                         </p>
                     )}
                 </div>
@@ -89,7 +89,7 @@ export default function App() {
                 <CurrentConditions latest={latest} />
 
                 <div className="toolbar">
-                    <h2>Historique</h2>
+                    <h2>History</h2>
                     <div className="duration-buttons">
                         {DURATIONS.map(({ value, label }) => (
                             <button
@@ -104,32 +104,32 @@ export default function App() {
                 </div>
 
                 <div className="charts-grid">
-                    <ChartCard title="Température" icon="🌡️" duration={duration}
+                    <ChartCard title="Temperature" icon="🌡️" duration={duration}
                         series={TEMPERATURE_SERIES} unit="°C" decimals={1} span={8} />
                     <WindRose duration={duration} span={4} />
-                    <ChartCard title="Humidité" icon="💧" duration={duration}
+                    <ChartCard title="Humidity" icon="💧" duration={duration}
                         series={HUMIDITY_SERIES} unit="%" decimals={0} />
-                    <ChartCard title="Pression" icon="🌀" duration={duration}
+                    <ChartCard title="Pressure" icon="🌀" duration={duration}
                         series={PRESSURE_SERIES} unit="hPa" decimals={0} />
-                    <ChartCard title="Vent" icon="💨" duration={duration}
+                    <ChartCard title="Wind" icon="💨" duration={duration}
                         series={WIND_SERIES} unit="km/h" decimals={1} />
                     <WindTimeline duration={duration} span={12} />
-                    <ChartCard title="Précipitations" icon="🌧️" duration={duration}
+                    <ChartCard title="Rainfall" icon="🌧️" duration={duration}
                         series={RAIN_SERIES} unit="mm" decimals={1} type="bar" fn="sum" cumulative />
                     <AirQualityBand duration={duration} />
-                    <ChartCard title="Batterie" icon="🔋" duration={duration}
+                    <ChartCard title="Battery" icon="🔋" duration={duration}
                         series={BATTERY_SERIES} unit="V" decimals={2} />
                 </div>
             </main>
 
             <footer>
-                <a href="/api-docs" target="_blank" rel="noreferrer">Documentation API</a>
+                <a href="/api-docs" target="_blank" rel="noreferrer">API documentation</a>
                 <span>·</span>
-                <a href="#/lorawan">Réseau LoRaWAN</a>
+                <a href="#/lorawan">LoRaWAN network</a>
                 <span>·</span>
-                <a href="#/gateway">Trafic passerelle</a>
+                <a href="#/gateway">Gateway traffic</a>
                 <span>·</span>
-                <a href="#/cicd">Pipeline CI/CD</a>
+                <a href="#/cicd">CI/CD pipeline</a>
             </footer>
         </div>
     );

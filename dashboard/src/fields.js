@@ -4,8 +4,8 @@ export const DURATIONS = [
     { value: '-1h', label: '1h' },
     { value: '-6h', label: '6h' },
     { value: '-24h', label: '24h' },
-    { value: '-7d', label: '7j' },
-    { value: '-30d', label: '30j' },
+    { value: '-7d', label: '7d' },
+    { value: '-30d', label: '30d' },
 ];
 
 // Fenêtre d'agrégation (moyenne) selon la plage, pour limiter le volume de points
@@ -28,7 +28,7 @@ export const SUM_AGGREGATE = {
 
 export const CARDINALS = [
     'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
-    'S', 'SSO', 'SO', 'OSO', 'O', 'ONO', 'NO', 'NNO',
+    'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW',
 ];
 
 // Point cardinal le plus proche d'un cap en degrés (0 = N, sens horaire).
@@ -46,8 +46,8 @@ export function windSpeedColor(speed) {
 export function formatTick(ms, daily) {
     const date = new Date(ms);
     return daily
-        ? date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })
-        : date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        ? date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })
+        : date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 }
 
 export function formatValue(value, decimals = 1) {
@@ -57,11 +57,11 @@ export function formatValue(value, decimals = 1) {
 // Échelle IAQ du capteur BME680 (indice Bosch)
 export const IAQ_LEVELS = [
     { max: 50, label: 'Excellent', color: '#4ade80' },
-    { max: 100, label: 'Bon', color: '#a3e635' },
-    { max: 150, label: 'Moyen', color: '#facc15' },
-    { max: 200, label: 'Dégradé', color: '#fb923c' },
-    { max: 300, label: 'Mauvais', color: '#f87171' },
-    { max: Infinity, label: 'Très mauvais', color: '#c084fc' },
+    { max: 100, label: 'Good', color: '#a3e635' },
+    { max: 150, label: 'Moderate', color: '#facc15' },
+    { max: 200, label: 'Poor', color: '#fb923c' },
+    { max: 300, label: 'Bad', color: '#f87171' },
+    { max: Infinity, label: 'Very bad', color: '#c084fc' },
 ];
 
 export function iaqLevel(iaq) {

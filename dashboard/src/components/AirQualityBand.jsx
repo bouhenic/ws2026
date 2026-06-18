@@ -37,7 +37,7 @@ export default function AirQualityBand({ duration, span = 6 }) {
 
         const daily = ['-7d', '-30d'].includes(duration);
         const labels = points.map((p) => formatTick(p.t, daily));
-        const fullLabels = points.map((p) => new Date(p.t).toLocaleString('fr-FR'));
+        const fullLabels = points.map((p) => new Date(p.t).toLocaleString('en-GB'));
 
         if (chartRef.current) chartRef.current.destroy();
         chartRef.current = new Chart(canvasRef.current, {
@@ -90,12 +90,12 @@ export default function AirQualityBand({ duration, span = 6 }) {
     return (
         <div className={`card span-${span}`}>
             <div className="card-header">
-                <h2>🍃 Qualité de l'air</h2>
+                <h2>🍃 Air quality</h2>
             </div>
             <div className="card-chart">
                 {error && <p className="card-message">⚠️ {error}</p>}
-                {!error && !points && <p className="card-message">Chargement…</p>}
-                {!error && isEmpty && <p className="card-message">Aucune donnée sur la période.</p>}
+                {!error && !points && <p className="card-message">Loading…</p>}
+                {!error && isEmpty && <p className="card-message">No data for this period.</p>}
                 <canvas ref={canvasRef} style={{ visibility: !error && points && !isEmpty ? 'visible' : 'hidden' }} />
             </div>
             <div className="card-stats">
