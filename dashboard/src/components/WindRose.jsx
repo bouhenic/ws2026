@@ -1,12 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiFetch } from '../api.js';
-import { CARDINALS } from '../fields.js';
-
-// Couleur d'un secteur selon la vitesse moyenne du vent (bleu → rouge, plafonné à 40 km/h)
-function speedColor(speed) {
-    const hue = 200 - Math.min(speed / 40, 1) * 200;
-    return `hsl(${hue} 80% 55%)`;
-}
+import { CARDINALS, windSpeedColor as speedColor } from '../fields.js';
 
 const LEGEND = [
     { label: '< 10', color: speedColor(5) },

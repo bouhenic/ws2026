@@ -5,6 +5,7 @@ import CurrentConditions from './components/CurrentConditions.jsx';
 import ChartCard from './components/ChartCard.jsx';
 import AirQualityBand from './components/AirQualityBand.jsx';
 import WindRose from './components/WindRose.jsx';
+import WindTimeline from './components/WindTimeline.jsx';
 import PipelinePage from './components/PipelinePage.jsx';
 import LorawanPage from './components/LorawanPage.jsx';
 import GatewayPage from './components/GatewayPage.jsx';
@@ -112,6 +113,7 @@ export default function App() {
                         series={PRESSURE_SERIES} unit="hPa" decimals={0} />
                     <ChartCard title="Vent" icon="💨" duration={duration}
                         series={WIND_SERIES} unit="km/h" decimals={1} />
+                    <WindTimeline duration={duration} span={12} />
                     <ChartCard title="Précipitations" icon="🌧️" duration={duration}
                         series={RAIN_SERIES} unit="mm" decimals={1} type="bar" fn="sum" cumulative />
                     <AirQualityBand duration={duration} />

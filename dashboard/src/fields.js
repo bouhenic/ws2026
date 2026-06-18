@@ -31,6 +31,18 @@ export const CARDINALS = [
     'S', 'SSO', 'SO', 'OSO', 'O', 'ONO', 'NO', 'NNO',
 ];
 
+// Point cardinal le plus proche d'un cap en degrés (0 = N, sens horaire).
+export function cardinalOf(deg) {
+    return CARDINALS[Math.round((((deg % 360) + 360) % 360) / 22.5) % 16];
+}
+
+// Couleur d'une vitesse de vent (bleu → rouge, plafonnée à 40 km/h) — partagée
+// par la rose des vents et le graphe temporel des flèches.
+export function windSpeedColor(speed) {
+    const hue = 200 - Math.min(speed / 40, 1) * 200;
+    return `hsl(${hue} 80% 55%)`;
+}
+
 export function formatTick(ms, daily) {
     const date = new Date(ms);
     return daily
